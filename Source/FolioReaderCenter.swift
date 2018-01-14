@@ -1001,9 +1001,9 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
 
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
-        if (navigationController?.isNavigationBarHidden == false) {
-            self.toggleBars()
-        }
+        //if (navigationController?.isNavigationBarHidden == false) {
+        //    self.toggleBars()
+        //}
 
         scrollScrubber?.scrollViewDidScroll(scrollView)
 
