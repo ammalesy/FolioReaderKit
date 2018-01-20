@@ -39,7 +39,7 @@ class FolioReaderPageIndicator: UIView {
         pagesLabel = UILabel(frame: CGRect.zero)
         pagesLabel.font = UIFont(name: "Avenir-Light", size: 10)!
         pagesLabel.textAlignment = NSTextAlignment.right
-        addSubview(pagesLabel)
+//        addSubview(pagesLabel)
 
         minutesLabel = UILabel(frame: CGRect.zero)
         minutesLabel.font = UIFont(name: "Avenir-Light", size: 10)!
