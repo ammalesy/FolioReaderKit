@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "NZFolioReaderKit"
-  s.version          = "1.2.1"
+  s.version          = "1.2.2"
   s.summary          = "A Swift ePub reader and parser framework for iOS."
   s.description  = <<-DESC
                    Written in Swift.
