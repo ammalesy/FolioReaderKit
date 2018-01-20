@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		182F221F20136E6000E47617 /* NZFolioReaderKit.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 182F221E20136E6000E47617 /* NZFolioReaderKit.podspec */; };
 		1A65DDCC1DA73F8E0033C277 /* MenuItemKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A65DDCB1DA73F8D0033C277 /* MenuItemKit.framework */; };
 		1A65DDD21DA744190033C277 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A65DDD01DA744190033C277 /* Realm.framework */; };
 		1A65DDD31DA744190033C277 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A65DDD11DA744190033C277 /* RealmSwift.framework */; };
@@ -59,7 +60,6 @@
 		1A9590121D397BE900D56699 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 1A958F8F1D397BE900D56699 /* Style.css */; };
 		1A9590131D397BE900D56699 /* ScrollScrubber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A958F901D397BE900D56699 /* ScrollScrubber.swift */; };
 		1A9590151D397C1300D56699 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A9590141D397C1300D56699 /* Images.xcassets */; };
-		1A9590171D397CAF00D56699 /* FolioReaderKit.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 1A9590161D397CAF00D56699 /* FolioReaderKit.podspec */; };
 		3AD5EEB91D9433C100E42810 /* FolioReaderWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD5EEB81D9433C100E42810 /* FolioReaderWebView.swift */; };
 		B0D6990F1D035FA2003B4CCD /* FolioReaderKit.h in Headers */ = {isa = PBXBuildFile; fileRef = B0D6990E1D035FA2003B4CCD /* FolioReaderKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B0D699161D035FA2003B4CCD /* FolioReaderKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D6990B1D035FA2003B4CCD /* FolioReaderKit.framework */; };
@@ -85,6 +85,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		182F221E20136E6000E47617 /* NZFolioReaderKit.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NZFolioReaderKit.podspec; sourceTree = "<group>"; };
 		1A65DDCB1DA73F8D0033C277 /* MenuItemKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MenuItemKit.framework; path = Carthage/Build/iOS/MenuItemKit.framework; sourceTree = "<group>"; };
 		1A65DDD01DA744190033C277 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		1A65DDD11DA744190033C277 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/iOS/RealmSwift.framework; sourceTree = "<group>"; };
@@ -137,7 +138,6 @@
 		1A958F8F1D397BE900D56699 /* Style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
 		1A958F901D397BE900D56699 /* ScrollScrubber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollScrubber.swift; sourceTree = "<group>"; };
 		1A9590141D397C1300D56699 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		1A9590161D397CAF00D56699 /* FolioReaderKit.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FolioReaderKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		3AD5EEB81D9433C100E42810 /* FolioReaderWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolioReaderWebView.swift; sourceTree = "<group>"; };
 		B0D6990B1D035FA2003B4CCD /* FolioReaderKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FolioReaderKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0D6990E1D035FA2003B4CCD /* FolioReaderKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FolioReaderKit.h; sourceTree = "<group>"; };
@@ -316,7 +316,7 @@
 		B0D699011D035FA1003B4CCD = {
 			isa = PBXGroup;
 			children = (
-				1A9590161D397CAF00D56699 /* FolioReaderKit.podspec */,
+				182F221E20136E6000E47617 /* NZFolioReaderKit.podspec */,
 				B0D6990D1D035FA2003B4CCD /* FolioReaderKit */,
 				B0D699191D035FA2003B4CCD /* FolioReaderKitTests */,
 				B0D6990C1D035FA2003B4CCD /* Products */,
@@ -504,9 +504,9 @@
 				1A958FB71D397BE900D56699 /* Lato-Regular.ttf in Resources */,
 				1A9590121D397BE900D56699 /* Style.css in Resources */,
 				1A958FB01D397BE900D56699 /* Andada-Bold.otf in Resources */,
-				1A9590171D397CAF00D56699 /* FolioReaderKit.podspec in Resources */,
 				1A958FB51D397BE900D56699 /* Lato-BoldItalic.ttf in Resources */,
 				1A958FB61D397BE900D56699 /* Lato-Italic.ttf in Resources */,
+				182F221F20136E6000E47617 /* NZFolioReaderKit.podspec in Resources */,
 				1A958FBD1D397BE900D56699 /* Raleway-BoldItalic.ttf in Resources */,
 				1A958FB11D397BE900D56699 /* Andada-BoldItalic.otf in Resources */,
 				1A958FB91D397BE900D56699 /* Lora-BoldItalic.ttf in Resources */,
