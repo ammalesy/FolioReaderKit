@@ -9,7 +9,6 @@
 import UIKit
 import SafariServices
 import MenuItemKit
-import JSQWebViewController
 
 /// Protocol which is used from `FolioReaderPage`s.
 @objc public protocol FolioReaderPageDelegate: class {
@@ -60,7 +59,7 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
 
     fileprivate var folioReader: FolioReader {
         guard let readerContainer = readerContainer else { return FolioReader() }
-        return self.readerContainer!.folioReader
+        return readerContainer.folioReader
     }
 
     // MARK: - View life cicle
@@ -133,14 +132,12 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
         let paddingTop: CGFloat = 20
         let paddingBottom: CGFloat = 30
 
-        var frame = CGRect(
+        return CGRect(
             x: bounds.origin.x,
             y: self.readerConfig.isDirection(bounds.origin.y + navTotal, bounds.origin.y + navTotal + paddingTop, bounds.origin.y + navTotal),
             width: bounds.width,
             height: self.readerConfig.isDirection(bounds.height - navTotal, bounds.height - navTotal - paddingTop - paddingBottom, bounds.height - navTotal)
         )
-        
-        return frame
     }
 
     func loadHTMLString(_ htmlContent: String!, baseURL: URL!) {
@@ -156,7 +153,7 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
     fileprivate func htmlContentWithInsertHighlights(_ htmlContent: String) -> String {
         var tempHtmlContent = htmlContent as NSString
         // Restore highlights
-        guard let bookId = (self.book.name as? NSString)?.deletingPathExtension else {
+        guard let bookId = (self.book.name as NSString?)?.deletingPathExtension else {
             return tempHtmlContent as String
         }
 
@@ -165,14 +162,22 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
         if (highlights.count > 0) {
             for item in highlights {
                 let style = HighlightStyle.classForStyle(item.type)
-                let tag = "<highlight id=\"\(item.highlightId!)\" onclick=\"callHighlightURL(this);\" class=\"\(style)\">\(item.content!)</highlight>"
+                
+                var tag = ""
+                if let _ = item.noteForHighlight {
+                    tag = "<highlight id=\"\(item.highlightId!)\" onclick=\"callHighlightWithNoteURL(this);\" class=\"\(style)\">\(item.content!)</highlight>"
+                } else {
+                    tag = "<highlight id=\"\(item.highlightId!)\" onclick=\"callHighlightURL(this);\" class=\"\(style)\">\(item.content!)</highlight>"
+                }
+                
                 var locator = item.contentPre + item.content
                 locator += item.contentPost
                 locator = Highlight.removeSentenceSpam(locator) /// Fix for Highlights
+                
                 let range: NSRange = tempHtmlContent.range(of: locator, options: .literal)
-
+                
                 if range.location != NSNotFound {
-                    let newRange = NSRange(location: range.location + item.contentPre.characters.count, length: item.content.characters.count)
+                    let newRange = NSRange(location: range.location + item.contentPre.count, length: item.content.count)
                     tempHtmlContent = tempHtmlContent.replacingCharacters(in: newRange, with: tag) as NSString
                 } else {
                     print("highlight range not found")
@@ -220,7 +225,7 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
         delegate?.pageDidLoad?(self)
     }
 
-    open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
         guard
             let webView = webView as? FolioReaderWebView,
             let scheme = request.url?.scheme else {
@@ -229,12 +234,12 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
 
         guard let url = request.url else { return false }
 
-        if scheme == "highlight" {
-
+        if scheme == "highlight" || scheme == "highlight-with-note" {
             shouldShowBar = false
 
             guard let decoded = url.absoluteString.removingPercentEncoding else { return false }
-            let rect = CGRectFromString(decoded.substring(from: decoded.index(decoded.startIndex, offsetBy: 12)))
+            let index = decoded.index(decoded.startIndex, offsetBy: 12)
+            let rect = NSCoder.cgRect(for: String(decoded[index...]))
 
             webView.createMenu(options: true)
             webView.setMenuVisible(true, andRect: rect)
@@ -242,9 +247,9 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
 
             return false
         } else if scheme == "play-audio" {
-
             guard let decoded = url.absoluteString.removingPercentEncoding else { return false }
-            let playID = decoded.substring(from: decoded.index(decoded.startIndex, offsetBy: 13))
+            let index = decoded.index(decoded.startIndex, offsetBy: 13)
+            let playID = String(decoded[index...])
             let chapter = self.folioReader.readerCenter?.getCurrentChapter()
             let href = chapter?.href ?? ""
             self.folioReader.readerAudioPlayer?.playAudio(href, fragmentID: playID)
@@ -255,9 +260,8 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
             let anchorFromURL = url.fragment
 
             // Handle internal url
-            if ((url.path as NSString).pathExtension != "") {
-
-                var pathComponent = (self.book.opfResource.href as? NSString)?.deletingLastPathComponent
+            if !url.pathExtension.isEmpty {
+                let pathComponent = (self.book.opfResource.href as NSString?)?.deletingLastPathComponent
                 guard let base = ((pathComponent == nil || pathComponent?.isEmpty == true) ? self.book.name : pathComponent) else {
                     return true
                 }
@@ -282,7 +286,6 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
                 } else {
                     self.folioReader.readerCenter?.changePageWith(href: href, animated: true)
                 }
-
                 return false
             }
 
@@ -297,29 +300,20 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
             print("Email")
             return true
         } else if url.absoluteString != "about:blank" && scheme.contains("http") && navigationType == .linkClicked {
-
-            if #available(iOS 9.0, *) {
-                let safariVC = SFSafariViewController(url: request.url!)
-                safariVC.view.tintColor = self.readerConfig.tintColor
-                self.folioReader.readerCenter?.present(safariVC, animated: true, completion: nil)
-            } else {
-                let webViewController = WebViewController(url: request.url!)
-                let nav = UINavigationController(rootViewController: webViewController)
-                nav.view.tintColor = self.readerConfig.tintColor
-                self.folioReader.readerCenter?.present(nav, animated: true, completion: nil)
-            }
+            let safariVC = SFSafariViewController(url: request.url!)
+            safariVC.view.tintColor = self.readerConfig.tintColor
+            self.folioReader.readerCenter?.present(safariVC, animated: true, completion: nil)
             return false
         } else {
             // Check if the url is a custom class based onClick listerner
             var isClassBasedOnClickListenerScheme = false
             for listener in self.readerConfig.classBasedOnClickListeners {
 
-                if
-                    (scheme == listener.schemeName),
+                if scheme == listener.schemeName,
                     let absoluteURLString = request.url?.absoluteString,
                     let range = absoluteURLString.range(of: "/clientX=") {
-                    let baseURL = absoluteURLString.substring(to: range.lowerBound)
-                    let positionString = absoluteURLString.substring(from: range.lowerBound)
+                    let baseURL = String(absoluteURLString[..<range.lowerBound])
+                    let positionString = String(absoluteURLString[range.lowerBound...])
                     if let point = getEventTouchPoint(fromPositionParameterString: positionString) {
                         let attributeContentString = (baseURL.replacingOccurrences(of: "\(scheme)://", with: "").removingPercentEncoding)
                         // Call the on click action block
